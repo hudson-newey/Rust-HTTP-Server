@@ -1,5 +1,5 @@
 [package]
-name = "fileServer"
+name = "http_server"
 version = "0.1.0"
 authors = ["Grathium-Industries <GrathiumIndustries@gmail.com>"]
 edition = "2018"

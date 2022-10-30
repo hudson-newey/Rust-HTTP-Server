@@ -1,34 +1,33 @@
 extern crate tiny_http;
-
-// made with the help of tinyHTTP
 use tiny_http::{Response, Server};
-use std::fs;
+use tiny_http::Header;
 
-pub fn start_server(file_to_serve : &str) {
-    let server = Server::http("0.0.0.0:8080").unwrap();
+mod util;
 
-    println!("Started Server on port 8080");
+pub fn start_server() {
+ 
+  const SERVER_PORT: i16 = 8080;
+  let server_address: String = format!("0.0.0.0:{}", SERVER_PORT);
+  let server = Server::http(server_address).unwrap();
 
-    // requests
-    for request in server.incoming_requests() {
-        println!(
-            "url: {:?}",
-            request.url()
-        );
+  println!("Started Server on port :{}", SERVER_PORT);
 
-        // 200 server responses
-        let response = Response::from_string(read_file(file_to_serve));
-        request.respond(response);
-    }
-}
+  for request in server.incoming_requests() {
+    println!(
+      "url: {:?}",
+      request.url()
+    );
 
-// read file function
-// input: filename [0]
-// output: returns contents of file as std::string::String
-fn read_file(file_name : &str) -> std::string::String {
-    // --snip--
-    let contents = fs::read_to_string(file_name)
-        .expect("Something went wrong reading the file");
-
-    return contents
+    let requested_file: &str = request.url();
+    let file_contents: String = util::read_file(requested_file);
+    let content_header = "Content-Type: text/html"
+      .parse::<Header>()
+      .unwrap();
+    
+    let response =
+      Response::from_string(file_contents)
+      .with_header(content_header);
+    
+    let _result = request.respond(response);
+  }
 }
