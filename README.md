@@ -6,4 +6,4 @@
 ---
   
 To Run: `$ ./start.sh`  
-Goto (http://localhost:8080/)[http://localhost:8080/]
+Goto [http://localhost:8080/](http://localhost:8080/)
